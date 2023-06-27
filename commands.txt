@@ -1,0 +1,79 @@
+from NewsPaper.models import *
+ u1 = User.objects.create_user('Tom')
+ u2 = User.objects.create_user('Jerry')
+Author.objects.create(authorUser = u1) 
+Author.objects.create(authorUser = u2) 
+Category.objects.create(name = 'Медицина')           
+Category.objects.create(name = 'Дети')      
+ Category.objects.create(name = 'IT') 
+Category.objects.create(name = 'Мода') 
+Category.objects.create(name = 'Политика') 
+Post.objects.create(author = author1, categoryType='NW', title='Тут новости', text='Что-то про политику и медицину')                            
+<Post: Post object (1)>
+>>> Post.objects.create(author = author2, categoryType='AR',  title='Тут первая статья', text='Что-то про  медициу и IT')                           
+<Post: Post object (2)>
+>>> Post.objects.create(author = author1, categoryType='AR', title='Тут вторая статья', text='Что-то про детей и  медицину')                            
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=5))      
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))  
+>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=1))                              
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=2)) 
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=1)) 
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3)) 
+>>> Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='commentHere')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=2).authorUser, text='another comment') 
+<Comment: Comment object (2)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='T.Y')             
+<Comment: Comment object (3)>
+>>> Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='')    
+<Comment: Comment object (4)>
+>>> Comment.objects.get(id=1).like()                                                                                                      
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=1).rating
+3
+>>> Comment.objects.get(id=3).dislike() 
+>>> Comment.objects.get(id=4).dislike()  
+>>> 
+>>> Comment.objects.get(id=4).dislike()
+>>> Comment.objects.get(id=4).dislike()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=3).like() 
+>>> Post.objects.get(id=3).dislike() 
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=2).dislike() 
+>>> 
+>>> a2= Author.objects.get(id=2) 
+>>> a2.update_rating()
+>>> a2.ratingAuthor   
+>>> a1= Author.objects.get(id=1) 
+>>> a1.update_rating()
+>>> a1.ratingAuthor   
+a = Author.objects.order_by('-ratingAuthor')[:1]
+>>> for i in a:                   
+...     i.ratingAuthor
+...     i.authorUser.username
+... 
+6
+'Tom'
+ p = Post.objects.order_by('-rating')[:1] 
+for i in p:
+	i.dateCreation
+	i.rating
+	i.title
+	i.text
+datetime.datetime(2023, 5, 30, 23, 26, 15, 6880)
+2
+'Тут новости'
+'Что-то про политику и медицину'
+
+>>> Post.objects.order_by('-rating')[:1]
+<QuerySet [<Post: Post object (1)>]>
+
+
+
+
+
+ 
