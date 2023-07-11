@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from .forms import PostForm
 from .filters import NewsFilter
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # def news_search(request):
@@ -38,6 +39,7 @@ class Search(NewsList):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['something'] = 'some'
         return context
 
 class NewsDetail(DetailView):
@@ -46,7 +48,8 @@ class NewsDetail(DetailView):
     context_object_name = 'new'
 
 
-class NewsCreate(CreateView):
+class NewsCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
