@@ -4,19 +4,7 @@ from django.urls import reverse_lazy
 from .forms import PostForm
 from .filters import NewsFilter
 from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-# def news_search(request):
-#     queryset = Post.objects.all()
-#     filterset = NewsFilter(request.GET, queryset)
-#
-#     context = {
-#         'filterset': filterset,
-#         'news_search': filterset.qs,
-#     }
-#     return render(request, 'search.html', context)
-
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 class NewsList(ListView):
     model = Post
@@ -48,30 +36,32 @@ class NewsDetail(DetailView):
     context_object_name = 'new'
 
 
-class NewsCreate(LoginRequiredMixin, CreateView):
-    raise_exception = True
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'news_create'
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        if self.request.path == '/news/articles/create/':
+        if self.request.path == '/articles/create/':
             post.categoryType = 'AR'
-        elif self.request.path == '/news/news/create/':
+        elif self.request.path == '/news/create/':
             post.categoryType = 'NW'
         post.save()  # сохраняем изменения в базу данных
         return super().form_valid(form)
 
     success_url = reverse_lazy('news_list')
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'news_update'
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
 
-class NewsDelete(DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'news_delete'
     model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('news_list')
