@@ -1,10 +1,34 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category
+from .models import Post, Category, Subscription, PostCategory
 from django.urls import reverse_lazy
 from .forms import PostForm
 from .filters import NewsFilter
 from django.shortcuts import render
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
+from django.db.models import Exists, OuterRef
+
+
+
+@login_required
+@csrf_protect
+def subscriptions(request):
+    if request.method == 'POST':
+        category_id = request.POST.get('category_id')
+        category = Category.objects.get(id=category_id)
+        action = request.POST.get('action')
+
+        if action == 'subscribe':
+            Subscription.objects.create(user=request.user, category=category)
+        elif action == 'unsubscribe':
+            Subscription.objects.filter(user=request.user, category=category).delete()
+
+    categories_with_subscriptions = Category.objects.annotate(user_subscribed=Exists(
+        Subscription.objects.filter(user=request.user, category=OuterRef('pk')))).order_by('name')
+
+    return render(request, 'subscriptions.html', {'categories': categories_with_subscriptions},)
+
 
 class NewsList(ListView):
     model = Post
@@ -48,7 +72,7 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
             post.categoryType = 'AR'
         elif self.request.path == '/news/create/':
             post.categoryType = 'NW'
-        post.save()  # сохраняем изменения в базу данных
+        post.save()
         return super().form_valid(form)
 
     success_url = reverse_lazy('news_list')

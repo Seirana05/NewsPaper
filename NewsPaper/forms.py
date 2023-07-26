@@ -10,10 +10,7 @@ class PostForm(forms.ModelForm):
             'text',
             'postCategory',
             'author'
-
-
         ]
-
         def clean(self):
             cleaned_data = super().clean()
             text = cleaned_data.get("text")
