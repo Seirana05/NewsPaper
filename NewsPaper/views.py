@@ -75,6 +75,7 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         post.save()
         return super().form_valid(form)
 
+
     success_url = reverse_lazy('news_list')
 
 class NewsUpdate(PermissionRequiredMixin, UpdateView):

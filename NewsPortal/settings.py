@@ -167,3 +167,9 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = "seirana.ramazanova@yandex.ru"
 
 SERVER_EMAIL = "seirana.ramazanova@yandex.ru"
+
+CELERY_BROKER_URL = 'redis://default:YiGcMU9ExwJmCwDnwMcMkyKiRGr1ADel@redis-17212.c238.us-central1-2.gce.cloud.redislabs.com:17212'
+CELERY_RESULT_BACKEND = 'redis://default:YiGcMU9ExwJmCwDnwMcMkyKiRGr1ADel@redis-17212.c238.us-central1-2.gce.cloud.redislabs.com:17212'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

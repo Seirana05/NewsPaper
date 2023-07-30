@@ -1,20 +1,7 @@
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from django.template.loader import render_to_string
-from django.conf import settings
-
+from .tasks import send_mail
 from .models import PostCategory
-from django.core.mail import EmailMultiAlternatives
-
-
-def send_mail(preview, pk, title, subscribers):
-    html_context = render_to_string(
-        'new_post_email.html',
-        {'text': preview, 'link': f'http://127.0.0.1/news/{pk}'})
-    msg = EmailMultiAlternatives(
-        subject=title, body='', from_email='seirana.ramazanova@yandex.ru', to=subscribers)
-    msg.attach_alternative(html_context, 'text/html')
-    msg.send()
 
 
 @receiver(m2m_changed, sender=PostCategory)
@@ -25,7 +12,10 @@ def post_created(sender, instance, **kwargs):
         for category in categories:
             subscribers += category.subscribers.all()
         subscribers = [s.email for s in subscribers]
-        send_mail(instance.preview(), instance.pk, instance.title, subscribers)
+        send_mail.(instance.preview(), instance.pk, instance.title, subscribers)
+
+
+
 
 
 #         emails = User.objects.filter(subscriptions__category=instance.category).values_list('email', flat=True)
