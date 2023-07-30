@@ -12,7 +12,7 @@ def post_created(sender, instance, **kwargs):
         for category in categories:
             subscribers += category.subscribers.all()
         subscribers = [s.email for s in subscribers]
-        send_mail.(instance.preview(), instance.pk, instance.title, subscribers)
+        send_mail(instance.preview(), instance.pk, instance.title, subscribers)
 
 
 
