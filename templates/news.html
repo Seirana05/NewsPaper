@@ -1,6 +1,7 @@
 {% extends 'flatpages/default.html' %}
 {% load custom_filters %}!
 {% load custom_tags %}
+{% load cache %}
 {% block title %}
 News
 {% endblock title %}
@@ -12,6 +13,7 @@ News
 <hr>
     {% if news %}
         <table>
+            {% cache 300 table %}
             <tr>
                 <td> Заголовок </td>
                 <td> Дата </td>
@@ -20,6 +22,7 @@ News
                 <td>Действия</td>
                 {% endif %}
             </tr>
+            {% endcache %}
             {% for new in news %}
             <tr>
                 <td>{{ new.title|censor }}</td>

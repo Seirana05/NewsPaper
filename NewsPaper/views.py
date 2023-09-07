@@ -8,6 +8,10 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.db.models import Exists, OuterRef
+import logging
+
+
+logger = logging.getLogger('NewsPaper.NewsPortal')
 
 
 
@@ -51,7 +55,6 @@ class Search(NewsList):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
-        context['something'] = 'some'
         return context
 
 class NewsDetail(DetailView):
